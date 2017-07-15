@@ -30,6 +30,11 @@ Using this file in a set of scripts guarantees the same naming and the same synt
 all the scripts. If the documentation of an option changes from a script to another,
 you simply have to override the documentation of this option.
 
+# Parameters you don't want to have an option for
+
+If you think that one (or some parameters) should not have a dedicated option,
+they are collected in a special value of the output parameter : _unassigned .
+
 # Structure of the parameters file
 
 The file containing the options is a json file. This is the structure :
@@ -113,4 +118,8 @@ To be done.
 # Support for multiple values
 To be done.
 
+# Support for interdependent options
+To be done
 
+# Supplying a json as arguments and validate it
+To be done
