@@ -1,0 +1,25 @@
+{
+	"filepath" : {
+		"doc": "The absolute path to the file to use.",
+		"longOption": "--path-to-file"
+	},
+
+	"tokenName" : {
+		"doc": "The token name that you want to replace in the the file",
+		"longOption": "--token",
+		"value": "@token@"
+	},
+
+	"tokenValue" : {
+		"doc": "The value that will be used to replace the token in a file list.",
+		"longOption": "--value",
+		"value": "default"
+	},
+
+	"flagReplaceFirstOnly" : {
+		"doc" : "Requires to replace only the first occurence of the token",
+		"longOption": "--replace-first-only",
+		"value": false
+	}
+}
+
