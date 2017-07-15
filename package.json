@@ -1,0 +1,25 @@
+{
+  "name": "js-command-line-parsing",
+  "version": "0.1.0",
+  "description": "Yet another library to parse command line arguments.",
+  "main": "index.js",
+  "scripts": {
+    "test": "run-unit-tests.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boris-lenzinger/js-command-line-parsing.git"
+  },
+  "keywords": [
+    "javascript",
+    "nodejs",
+    "CLI",
+    "parsing"
+  ],
+  "author": "Boris Lenzinger",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/boris-lenzinger/js-command-line-parsing/issues"
+  },
+  "homepage": "https://github.com/boris-lenzinger/js-command-line-parsing#readme"
+}
