@@ -2,7 +2,6 @@ var fs = require('fs');
 
 var exports = module.exports={};
 
-// Loading the parameters in a synchronous way
 exports.libraryAvailableParameters = {};
 
 exports.defineParameters = function(pathToParametersFile) {
