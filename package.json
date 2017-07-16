@@ -4,7 +4,7 @@
   "description": "Yet another library to parse command line arguments.",
   "main": "index.js",
   "scripts": {
-    "test": "run-unit-tests.sh"
+    "test": "./node_modules/jasmine-node/bin/jasmine-node spec"
   },
   "repository": {
     "type": "git",
@@ -23,11 +23,12 @@
   },
   "homepage": "https://github.com/boris-lenzinger/js-command-line-parsing#readme",
   "dependencies": {
-    "jasmine": "^2.6.0",
-    "karma": "^1.7.0"
+    "jasmine": "^2.6.0"
   },
   "devDependencies": {
+    "jasmine": "^2.6.0",
     "karma-jasmine": "^1.1.0",
-    "karma-phantomjs-launcher": "^1.0.4"
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-requirejs": "^1.1.0"
   }
 }
