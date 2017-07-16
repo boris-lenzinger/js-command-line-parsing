@@ -1,16 +1,18 @@
 var fs = require('fs');
 
-// Loading the parameters in a synchronous way
-var libraryAvailableParameters = {};
+var exports = module.exports={};
 
-function defineParameters(pathToParametersFile) {
-    libraryAvailableParameters = JSON.parse(fs.readFileSync(pathToParametersFile, 'utf8'));
+// Loading the parameters in a synchronous way
+exports.libraryAvailableParameters = {};
+
+exports.defineParameters = function(pathToParametersFile) {
+    exports.libraryAvailableParameters = JSON.parse(fs.readFileSync(pathToParametersFile, 'utf8'));
 }
 
 // Now we can parse to build a parameter object.
-function parse(arguments, availableParameters) {
+exports.parse = function(arguments, availableParameters) {
     if ( availableParameters == undefined ) {
-	availableParameters = libraryAvailableParameters;
+	availableParameters = exports.libraryAvailableParameters;
     }
     
     var parameters = {};
@@ -19,7 +21,7 @@ function parse(arguments, availableParameters) {
 
     for ( var i = 0; i < arguments.length; i++ ) {
 	var parameter = arguments[i];
-	var definitionOfOption = getOptionDefinition(availableParameters, parameter)
+	var definitionOfOption = exports.getOptionDefinition(availableParameters, parameter)
 	// Get the name of the parameter
 	if ( typeof definitionOfOption.name !== 'undefined' ) {
 	    var value = undefined;
@@ -46,7 +48,7 @@ function parse(arguments, availableParameters) {
 
 
 
-function getOptionDefinition(availableParameters, parameter) {
+exports.getOptionDefinition = function(availableParameters, parameter) {
     var definition = {};
     for ( var candidate in availableParameters ) {
 	var shortOption = availableParameters[candidate].shortOption;

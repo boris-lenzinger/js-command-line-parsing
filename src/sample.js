@@ -1,16 +1,15 @@
-var fs = require("fs");
-
-var lib = fs.readFileSync("./lib-parsing.js", "utf8");
-eval(lib);
+var parser = require("./lib-parsing.js");
 
 var pathToParameterFile = process.argv[2];
 if ( pathToParameterFile !== undefined ) {
-    defineParameters(process.argv[2]);
+    parser.defineParameters(process.argv[2]);
 } else {
-    defineParameters("./parameters.json");
+    parser.defineParameters("./parameters.json");
 }
 
-var parameters = parse(['--path-to-file', '/tmp/tokenized-file', 'isolatedValue', '--token', 'name', '--value', 'replacement', '--replace-first-only', 'anotherIsolatedValue']);
+console.log(parser.libraryAvailableParameters);
+
+var parameters = parser.parse(['--path-to-file', '/tmp/tokenized-file', 'isolatedValue', '--token', 'name', '--value', 'replacement', '--replace-first-only', 'anotherIsolatedValue']);
 
 console.log(parameters);
 console.log("=====================================");
@@ -23,6 +22,6 @@ var customParameters = {
     }
 };
 
-parameters = parse(['--new-option', 'valueOfOption', 'stillAnIsolatedValue'], customParameters);
+parameters = parser.parse(['--new-option', 'valueOfOption', 'stillAnIsolatedValue'], customParameters);
 
 console.log(parameters);
