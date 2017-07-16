@@ -26,7 +26,11 @@
     "jasmine": "^2.6.0"
   },
   "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-jasmine-node-coverage": "^1.2.0",
     "jasmine": "^2.6.0",
+    "karma": "^1.7.0",
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.4",
     "karma-requirejs": "^1.1.0"
