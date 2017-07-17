@@ -76,13 +76,4 @@ describe('Checking that parsing is defining the good values', function() {
 
 // ========================= ERROR  CASES ===================
 describe('Error cases must be well handled', function() {
-    var foo;
-
-    beforeAll(function() {
-	foo = 1;
-    });
-
-    it('Passing unknown option must throw an exception', function() {
-	
-    });
 });
