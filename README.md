@@ -69,9 +69,13 @@ To declare mandatory parameters, you have to define the following array :
 
 ``` javascript
 var mandatoryParameters = [
-	"name2"
+	name1,
+	name2
 ];
 ```
+The idea is to keep the file parameters.json generic since it is a general definition of the
+available options. Some options might be mandatory for some scripts and not mandatory for
+others. So the definition of mandatory must be set elsewhere.
 
 # Automatic generation of the documentation
 
