@@ -7,6 +7,7 @@ describe("Parsing of a parameters file", function() {
 	parser.defineGlobalParameters("src/parameters.json");
     });
 
+
     it("Checking that the definition of parameters is loaded.", function() {
 	expect(parser.libraryAvailableParameters).toBeDefined();
     });
@@ -19,6 +20,7 @@ describe("Parsing of a parameters file", function() {
 	expect(parser.libraryAvailableParameters['flagReplaceFirstOnly']).toBeDefined();
     });
 
+    
     it("Checking that the content of the filepath definition is ok.", function() {
 	expect(parser.libraryAvailableParameters['filepath'].doc).toBeDefined();
 	expect(parser.libraryAvailableParameters['filepath'].longOption).toBeDefined();
@@ -26,6 +28,7 @@ describe("Parsing of a parameters file", function() {
 	
     });
 
+    
     it("Checking that the content of the tokenName definition is ok.", function() {
 	expect(parser.libraryAvailableParameters['tokenName'].doc).toBeDefined();
 	expect(parser.libraryAvailableParameters['tokenName'].longOption).toBeDefined();
@@ -33,6 +36,7 @@ describe("Parsing of a parameters file", function() {
 	
     });
 
+    
     it("Checking that the content of the tokenValue definition is ok.", function() {
 	expect(parser.libraryAvailableParameters['tokenValue'].doc).toBeDefined();
 	expect(parser.libraryAvailableParameters['tokenValue'].longOption).toBeDefined();
@@ -40,6 +44,7 @@ describe("Parsing of a parameters file", function() {
 	
     });
 
+    
     it("Checking that the content of the flagReplaceFirstOnly definition is ok.", function() {
 	expect(parser.libraryAvailableParameters['flagReplaceFirstOnly'].doc).toBeDefined();
 	expect(parser.libraryAvailableParameters['flagReplaceFirstOnly'].longOption).toBeDefined();
@@ -51,7 +56,7 @@ describe("Parsing of a parameters file", function() {
 });
 
 
-describe('Checking that parsing is defining the good values', function() {
+describe('Checking that parsing is assigning the good values', function() {
     var parameters;
  
     beforeEach(function() {
@@ -73,16 +78,37 @@ describe('Checking that parsing is defining the good values', function() {
 
 
 // =========================================================
-describe('Checking parameters picking...', function() {
+describe('Parameters picking', function() {
     var parameters;
  
     beforeEach(function() {
+	parser.defineGlobalParameters("src/parameters.json");
+	var supported = [ 'filepath', 'tokenName', 'tokenValue' ];
+	parameters = parser.pickParameters(supported);
+    });
+    
+    it('Picking parameters', function() {
+	expect(parameters.supported).toBeDefined();
+	expect(parameters.supported['filepath']).toBeDefined();
+	expect(parameters.supported['tokenName']).toBeDefined();
+	expect(parameters.supported['tokenValue']).toBeDefined();
+	expect(parameters.supported['flagReplaceFirstOnly']).toBeUndefined();
+    });
+
+    it('Parsing with restricted set of parameters', function() {
+	parameters = parser.parse(['--path-to-file', '/tmp/tokenized-file', 'isolatedValue', '--token', 'name', '--value', 'replacement', '--replace-first-only', 'anotherIsolatedValue'], parameters);
+	expect(parameters['filepath']).toBe('/tmp/tokenized-file');
+	expect(parameters['tokenName']).toBe('name');
+	expect(parameters['tokenValue']).toBe('replacement');
+	expect(parameters['flagReplaceFirstOnly']).toBeUndefined();
+	expect(parameters['_unassigned']).toBeDefined();
+	expect(parameters['_unassigned'].length).toBe(3);
+	expect(parameters['_unassigned'][0]).toBe('isolatedValue');
+	expect(parameters['_unassigned'][1]).toBe('--replace-first-only');
+	expect(parameters['_unassigned'][2]).toBe('anotherIsolatedValue');
 	
     });
     
-    it('Picking a parameter', function() {
-	
-    });
 });
 
 
