@@ -277,7 +277,6 @@ exports.Options.prototype.parse = function(arguments) {
 
     var missingParameters = [];
     for ( var mandatory in mandatoryParameters ) {
-	console.log('Testing if '+mandatory+' is missing or not');
 	if ( parameters.list[mandatory] === undefined ) {
 	    missingParameters.push(mandatoryParameters[mandatory].longOption);
 	}
