@@ -2,34 +2,54 @@ var fs = require('fs');
 
 var exports = module.exports={};
 
-exports.libraryAvailableParameters = {};
+exports.Parameter = function(name, doc, longOption) {
+	this.name = name;
+	this.doc = doc;
+	this.longOption = longOption;
+}
+
+
+exports.Options = function(pathToParametersFile, encodingOfFile) {
+	if ( encodingOfFile === undefined ) {
+		encodingOfFile = 'utf8';
+	}
+	if ( pathToParametersFile !== undefined ) {
+		this.list = JSON.parse(fs.readFileSync(pathToParametersFile, encodingOfFile));
+	} else {
+		this.list = {};
+	}
+}
+
+
+exports.libraryAvailableParameters = new exports.Options();
 
 /**
- * Function to ingest the file defining the parameters for the parsing.
- * The parsing is done, by default with the parameters that are supplied
- * to this function.
+ * Function to ingest the file defining all the parameters that you want to
+ * support in any of your scripts. This ensures the consistency in the naming of
+ * the options for all the scripts you will write. 
  */
-exports.defineGlobalParameters = function(pathToParametersFile) {
-    exports.libraryAvailableParameters = JSON.parse(fs.readFileSync(pathToParametersFile, 'utf8'));
+exports.defineGlobalParameters = function(pathToParametersFile, encodingOfFile) {
+    exports.libraryAvailableParameters = new exports.Options(pathToParametersFile, encodingOfFile);
+    return exports.libraryAvailableParameters;
 }
 
 
 /**
- * This function collects the parameters that you want to support for your script.
+ * This function picks the parameters that you want to support for your script.
  * It picks the different elements and contributes to create the object that you
- * you will pass to the parser.
+ * you will pass to the parser of the command line arguments.
  * @param listOfSupportedParameters : a string array with the name of the parameters as
  * supplied in the definition of the parameters.
  */
-exports.pickParameters = function(listOfSupportedParameters) {
-    var parametersAndLocalParsing = {};
-    parametersAndLocalParsing.supported = {};
+exports.Options.prototype.pickOptions = function(listOfSupportedParameters) {
+    var parametersAndLocalParsing = new exports.Options();
+    parametersAndLocalParsing.list = {};
 
     if ( listOfSupportedParameters !== undefined && exports.libraryAvailableParameters !== undefined ) {
 	for ( var i in listOfSupportedParameters ) {
-	    var defOfParameter = exports.libraryAvailableParameters[listOfSupportedParameters[i]];
+	    var defOfParameter = exports.libraryAvailableParameters.list[listOfSupportedParameters[i]];
 	    if ( defOfParameter !== undefined ) {
-		parametersAndLocalParsing.supported[listOfSupportedParameters[i]] = defOfParameter;
+		parametersAndLocalParsing.list[listOfSupportedParameters[i]] = defOfParameter;
 	    } else {
 		var message = 'Parameter '+listOfSupportedParameters[i]+' is not in the list of the supported parameters.';
 		throw new Error(message);
@@ -43,7 +63,7 @@ exports.pickParameters = function(listOfSupportedParameters) {
 
 /**
  * This function allows you to override the general documentation of the option to put
- * the one that is more relevant for this specific case.
+ * the one th	expect(options.list).toBeDefined();expect(options.list['filepath'].isMandatory).toBe(true);at is more relevant for this specific case.
  * @param parametersAndLocalParsing : the parameter that will be used for parsing the command line
  * of your script.
  * @param parameterName : the name of the parameter for which you want to override the documentation.
@@ -51,14 +71,14 @@ exports.pickParameters = function(listOfSupportedParameters) {
  * @return : the parameters that you will use for the parsing of your script. This is the variable that
  * was passed as the first parameter. If the parameter is not found, an error is thrown.
  */
-exports.overrideDocumentationOfElement = function(parametersAndLocalParsing, parameterName, newDocumentation) {
-    if ( parametersAndLocalParsing.supported[parameterName] !== undefined ) {
-	parametersAndLocalParsing.supported[parameterName].doc = newDocumentation;
+exports.Options.prototype.overrideDocumentationOfElement = function(parameterName, newDocumentation) {
+    if ( this.list[parameterName] !== undefined ) {
+	this.list[parameterName].doc = newDocumentation;
     } else {
 	throw new Error('Parameter "'+parameterName+'" was not found. Cannot override the documentation.');
     }
 
-    return parametersAndLocalParsing;
+    return this;
 }
 
 
@@ -69,18 +89,18 @@ exports.overrideDocumentationOfElement = function(parametersAndLocalParsing, par
  * @return the parametersAndLocalParsing object passed as parameter enrichied with a property
  * isMandatory for the parameters that must be defined as this.
  */
-exports.markParametersAsMandatory = function(parametersAndLocalParsing, mandatoryParameters) {
+exports.Options.prototype.markOptionsAsMandatory = function(mandatoryParameters) {
     if ( mandatoryParameters !== undefined ) {
 	for ( var i in mandatoryParameters ) {
 	    var paramName = mandatoryParameters[i];
-	    if ( parametersAndLocalParsing.supported[paramName] !== undefined ) {
-		parametersAndLocalParsing.supported[paramName].isMandatory = true;
+	    if ( this.list[paramName] !== undefined ) {
+		this.list[paramName].isMandatory = true;
 	    } else {
 		throw new Error('Cannot find parameter "'+paramName+'". Cannot mark set it as mandatory.');
 	    }
 	}
     }
-    return parametersAndLocalParsing;
+    return this;
 }
 
 
@@ -89,17 +109,22 @@ exports.markParametersAsMandatory = function(parametersAndLocalParsing, mandator
  * of the script you are writing in a quite free way. Check the function generateScriptDocumentation
  * if you want a predefined model of documentation for a script.
  */
-exports.generateParametersDocumentation = function(parametersAndLocalParsing) {
+exports.Options.prototype.generateParametersDocumentation = function() {
     var parameters = {}
-    if ( parametersAndLocalParsing !== undefined &&
-	 parametersAndLocalParsing.supported !== undefined ) {
-	parameters = parametersAndLocalParsing.supported;
+    if ( this.list !== undefined ) {
+	parameters = this.list;
     } else {
-	parameters = exports.libraryAvailableParameters;
+	parameters = exports.libraryAvailableParameters.list;
     }
 
     var longest = exports.getLengthOfLonguestOption(parameters);
+    // This is the number of spaces between the option and the documentation
+    // of the option
     var nbOfSpaces = 1;
+
+    // The documentation is built in multiple steps : the script documentation,
+    // the options documentation, then the post documentation of the script and
+    // the syntax examples.
     var documentation = [];
 
     for ( var item in parameters ) {
@@ -169,8 +194,8 @@ exports.generateScriptDocumentation = function(parametersAndLocalParsing, script
 	console.log("");
     }
 
-    if ( parametersAndLocalParsing.supported !== undefined ) {
-	exports.generateParametersDocumentation(parametersAndLocalParsing.supported);
+    if ( parametersAndLocalParsing.list !== undefined ) {
+	parametersAndLocalParsing.generateParametersDocumentation();
 	console.log("");
     }
 
@@ -197,8 +222,7 @@ exports.generateScriptDocumentation = function(parametersAndLocalParsing, script
  * @param parametersAndLocalParsing : all the details about the parameters that we support
  * and the parameters that are known for the parsing. The object has the following element for
  * the different :
- *  - supported
- *  - mandatory
+ *  - list 
  *  - localParsing : this is a special item. This is a function that offers to handle the
  *    unnamed parameters in a different way.
  * If a parameter is not in the supported list AND the local parsing rejects it, then an
@@ -208,12 +232,11 @@ exports.generateScriptDocumentation = function(parametersAndLocalParsing, script
  * name as specified in the object availableParameters. The value stored for the field is the
  * value parsed by the function.
  */
-exports.parse = function(arguments, parametersAndLocalParsing) {
-    if ( parametersAndLocalParsing == undefined ||
-	 parametersAndLocalParsing.supported == undefined ) {
+exports.Options.prototype.parse = function(arguments) {
+    if ( this.list == undefined ) {
 	availableParameters = exports.libraryAvailableParameters;
     } else {
-	availableParameters = parametersAndLocalParsing.supported;
+	availableParameters = this.list;
     }
 
     var mandatoryParameters = {};
@@ -224,7 +247,7 @@ exports.parse = function(arguments, parametersAndLocalParsing) {
 	}
     }
 
-    var parameters = {};
+    var parameters = new exports.Options();
     var isParameter = false;
 
     for ( var i = 0; i < arguments.length; i++ ) {
@@ -240,7 +263,7 @@ exports.parse = function(arguments, parametersAndLocalParsing) {
 		value = arguments[i+1];
 		i = i + 1;
 	    }
-	    parameters[definitionOfOption.name] = value;
+	    parameters.list[definitionOfOption.name] = value;
 	} else {
 	    // Handling parameters that do not have dedicated option
 	    // and storing them in a dedicated array
@@ -255,7 +278,7 @@ exports.parse = function(arguments, parametersAndLocalParsing) {
     var missingParameters = [];
     for ( var mandatory in mandatoryParameters ) {
 	console.log('Testing if '+mandatory+' is missing or not');
-	if ( parameters[mandatory] === undefined ) {
+	if ( parameters.list[mandatory] === undefined ) {
 	    missingParameters.push(mandatoryParameters[mandatory].longOption);
 	}
     }
