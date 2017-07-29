@@ -90,8 +90,6 @@ describe('Setting parameters as mandatory', function() {
     });
 
     it('Detecting the parameter as mandatory.', function() {
-	console.log("Options : ");
-	console.log(options['filepath']);
 	expect(options).toBeDefined();
 	expect(options.list['filepath']).toBeDefined();
 	expect(options.list['filepath'].isMandatory).toBe(true);
@@ -109,8 +107,6 @@ describe('Checking that parsing assigns the good values', function() {
 	var parameters = options.parse(['--path-to-file', '/tmp/tokenized-file', 'isolatedValue', '--token', 'name', '--value', 'replacement', '--replace-first-only', 'anotherIsolatedValue']);
 	expect(parameters).toBeDefined();
 	expect(parameters.list).toBeDefined();
-	console.log(JSON.stringify());
-	console.log(JSON.stringify(parameters));
 	expect(parameters.list['filepath']).toBe('/tmp/tokenized-file');
 	expect(parameters.list['tokenName']).toBe('name');
 	expect(parameters.list['tokenValue']).toBe('replacement');
