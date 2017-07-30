@@ -28,6 +28,7 @@
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^3.0.1",
     "grunt-jasmine-node-coverage": "^1.2.0",
     "jasmine": "^2.6.0",
     "karma": "^1.7.0",
