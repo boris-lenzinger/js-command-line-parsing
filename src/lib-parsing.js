@@ -124,7 +124,7 @@ exports.Options.prototype.markOptionsAsMandatory = function(mandatoryParameters)
  */
 exports.Options.prototype.generateDocumentation = function() {
     var parameters = {}
-    if ( this.list !== undefined ) {
+    if ( this.list !== undefined && Object.keys(this.list).length != 0 ) {
 	parameters = this.list;
     } else {
 	parameters = exports.libraryAvailableParameters.list;
@@ -272,7 +272,7 @@ exports.generateJSONScriptDocumentation = function(parametersAndLocalParsing, sc
  * value parsed by the function.
  */
 exports.Options.prototype.parse = function(arguments) {
-    if ( this.list == undefined ) {
+    if ( this.list == undefined || Object.keys(this.list).length == 0 ) {
 	availableParameters = exports.libraryAvailableParameters;
     } else {
 	availableParameters = this.list;

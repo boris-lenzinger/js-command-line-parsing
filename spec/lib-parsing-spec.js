@@ -177,6 +177,13 @@ describe('Checking that parsing assigns the good values', function() {
 	
     });
 
+    it('Parses with default option file from the library', function() {
+	var options = new parser.Options();
+	console.log(options);
+	var parameters = options.parse(['--path-to-file', '/tmp/tokenized-file', 'isolatedValue', '--token', 'name', '--value', 'replacement', '--replace-first-only', 'anotherIsolatedValue']);
+
+    });
+
 });
 
 
@@ -242,6 +249,14 @@ describe('Documentation Generation', function() {
 	var documentationOfOptions = options.generateDocumentation();
 	expect(documentationOfOptions).toBeDefined();
 	expect(documentationOfOptions.length).toBe(Object.keys(options.list).length);
+    });
+
+    it('Generates default documentation if list of option is empty', function() {
+	var options = new parser.Options();
+	var documentationOfOptions = options.generateDocumentation();
+	expect(documentationOfOptions).toBeDefined();
+	expect(documentationOfOptions.length).not.toBe(0);
+
     });
 
     it('Mandatory Parameters must have a (M) that is inserted', function() {
