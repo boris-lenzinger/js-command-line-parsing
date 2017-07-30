@@ -352,5 +352,3 @@ exports.getOptionDefinition = function(availableParameters, parameter) {
     return definition;
 }
 
-
-

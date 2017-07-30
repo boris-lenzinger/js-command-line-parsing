@@ -235,6 +235,41 @@ describe('Documentation Generation', function() {
 	expect(documentationOfOptions.length).toBe(Object.keys(options.list).length);
     });
 
+    it('Generates documentation for the filtered options only', function() {
+	var filter = ['filepath', 'tokenName'];
+	var options = parser.defineGlobalParameters("src/parameters.json").
+	    pickOptions(filter);
+	var documentationOfOptions = options.generateDocumentation();
+	expect(documentationOfOptions).toBeDefined();
+	expect(documentationOfOptions.length).toBe(Object.keys(options.list).length);
+    });
+
+    it('Mandatory Parameters must have a (M) that is inserted', function() {
+	var mandatory = ['filepath', 'tokenName'];
+	var options = parser.defineGlobalParameters("src/parameters.json").
+	    markOptionsAsMandatory(mandatory);
+	var documentationOfOptions = options.generateDocumentation();
+	expect(documentationOfOptions).toBeDefined();
+	var countForMandatory = 0;
+	var countForNonMandatory = 0;
+	for ( var indexDoc in documentationOfOptions ) {
+	    // The shape of the documentation is : the option, then spaces,
+	    // then the (M) (if it is mandatory), then space(s) and the documentation.
+	    var doc = documentationOfOptions[indexDoc];
+	    var regexpMandatory = new RegExp(' \(M\) ');
+	    var index = doc.search(/\s+\(M\)\s+/g);
+	    console.log(index,' ',doc);
+	    if ( index != -1 ) {
+		countForMandatory++;
+	    } else {
+		countForNonMandatory++;
+	    }
+	}
+	expect(documentationOfOptions.length).toBe(Object.keys(options.list).length);
+	expect(countForMandatory).toBe(mandatory.length);
+	expect(countForNonMandatory).toBe(Object.keys(options.list).length - mandatory.length);
+    });
+
 });
 
 
@@ -258,5 +293,4 @@ describe('Testing internal functions', function() {
     })
     
 });
-
 
