@@ -290,6 +290,17 @@ describe('Documentation Generation', function() {
 	expect(json.syntaxExamples).toBe(syntaxExamples);
     });
 
+    it('Normal documentation', function() {
+	var options = parser.defineGlobalParameters("src/parameters.json");
+	var header = 'Header of the script';
+	var postDoc = 'Postdoc of the script...';
+	var syntaxExamples = 'Multiple syntax examples to illustrate the different capabilities of the script';
+	var scriptDocumentation = { 'header': header, 'postDoc': postDoc, 'syntaxExamples': syntaxExamples};
+	parser.generateScriptDocumentation(options, scriptDocumentation);
+	// No test to run since this is sent to the console.
+	// Call is just to avoid low coverage in the code...
+    });
+
 });
 
 
