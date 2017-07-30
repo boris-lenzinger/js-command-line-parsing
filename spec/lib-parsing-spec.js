@@ -74,6 +74,20 @@ describe('Parameters picking', function() {
 	expect(options.list['flagReplaceFirstOnly']).toBeUndefined();
     });
 
+
+    it('Picking unknown option must raise an exception', function() {
+	var supported = [ 'unknownOption' ];
+	var exception;
+
+	try {
+	    options = parser.defineGlobalParameters("src/parameters.json").
+		pickOptions(supported);
+	} catch (e) {
+	    exception = e;
+	}
+	expect(exception).toBeDefined();
+    });
+
 });
 
 
@@ -86,7 +100,7 @@ describe('Setting parameters as mandatory', function() {
 	var mandatory = [ 'filepath' ];
 	options = parser.defineGlobalParameters("src/parameters.json").
 		pickOptions(supported).
-		markOptionsAsMandatory(mandatory);	
+		markOptionsAsMandatory(mandatory);
     });
 
     it('Detecting the parameter as mandatory.', function() {
@@ -95,10 +109,23 @@ describe('Setting parameters as mandatory', function() {
 	expect(options.list['filepath'].isMandatory).toBe(true);
     });
 
-    
+    it('Setting unknown option as mandatory must raise an exception.', function() {
+	var exception;
+	var mandatory = [ 'unknownOption' ];
+	try {
+	    options = parser.defineGlobalParameters("src/parameters.json").
+		markOptionsAsMandatory(mandatory);
+	} catch (e) {
+	    exception = e;
+	}
+	    
+	expect(exception).toBeDefined();
+    });
+
 });
 
 
+// =========================================================
 describe('Checking that parsing assigns the good values', function() {
  
     it("Passing a valid command line", function() {
@@ -133,10 +160,54 @@ describe('Checking that parsing assigns the good values', function() {
 	expect(parameters['_unassigned'][2]).toBe('anotherIsolatedValue');
 	
     });
+
+    it('Parsing with mandatory set of options but one mandatory is missing must raise an exception.', function() {
+	var mandatory = [ 'filepath' ];
+	var options = parser.defineGlobalParameters("src/parameters.json").
+	    pickOptions(['filepath', 'tokenName', 'tokenValue']).
+	    markOptionsAsMandatory(mandatory);	
+
+	var exception;
+	try {
+	    options.parse(['isolatedValue', '--token', 'name', '--value', 'replacement', '--replace-first-only', 'anotherIsolatedValue'], options);
+	} catch (e) {
+	    exception = e;
+	}
+	expect(exception).toBeDefined();
+	
+    });
+
+});
+
+
+// ==========================================================
+describe('Documentation Generation', function() {
+
+    it('Parameters', function() {
+	
+    }
+});
+
+
+// ==========================================================
+describe('Testing internal functions', function() {
+
+    it("GetSpaces", function() {
+	var output = parser.getSpaces(5);
+	expect(output).toBe('     ');
+	output = parser.getSpaces(0);
+	expect(output).toBe('');
+    });
+
+    it("getLengthOfLonguestOption", function() {
+	var options = undefined;
+	expect(parser.getLengthOfLonguestOption(options)).toBe(0);
+	options = {};
+	expect(parser.getLengthOfLonguestOption(options)).toBe(0);
+	options = { list: { 'a': { longOption: '--a'}, 'aaaa': {longOption: '--aaaa'}, 'aa': {longOption: '--aa'} } };
+	expect(parser.getLengthOfLonguestOption(options.list)).toBe('--aaaa'.length);
+    })
     
 });
 
 
-// ========================= ERROR  CASES ===================
-describe('Error cases must be well handled', function() {
-});
