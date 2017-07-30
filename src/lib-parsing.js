@@ -63,7 +63,7 @@ exports.Options.prototype.pickOptions = function(listOfSupportedParameters) {
  * @param newDocumentation : the new content of the documentation.
  * @return : the object you have applied the method to. If the parameter is not found, an error is thrown.
  */
-exports.Options.prototype.overrideDocumentationOfElement = function(parameterName, newDocumentation) {
+exports.Options.prototype.overrideDocumentation = function(parameterName, newDocumentation) {
     if ( this.list[parameterName] !== undefined ) {
 	this.list[parameterName].doc = newDocumentation;
     } else {
@@ -85,7 +85,7 @@ exports.Options.prototype.overrideDocumentationOfElement = function(parameterNam
  */
 exports.Options.prototype.overrideDefaultValue = function(parameterName, newValue) {
     if ( this.list[parameterName] !== undefined ) {
-	this.list[parameterName].value = newDocumentation;
+	this.list[parameterName].value = newValue;
     } else {
 	throw new Error('Parameter "'+parameterName+'" was not found. Cannot override the value.');
     }

@@ -181,11 +181,32 @@ describe('Checking that parsing assigns the good values', function() {
 
 
 // ==========================================================
+describe('Override of options', function() {
+
+    it('Documentation', function() {
+	var newDocumentation = 'New documentation for filepath option.';
+	var options = parser.defineGlobalParameters("src/parameters.json").
+	    overrideDocumentation('filepath', newDocumentation);
+	expect(options.list['filepath'].doc).toBe(newDocumentation);
+    });
+       
+    it('Parameters', function() {
+	var newDefaultValue = '/usr/local/bin';
+	var options = parser.defineGlobalParameters("src/parameters.json").
+	    overrideDefaultValue('filepath', newDefaultValue);
+	expect(options.list['filepath'].value).toBe(newDefaultValue);
+    });
+       
+});
+
+
+
+// ==========================================================
 describe('Documentation Generation', function() {
 
     it('Parameters', function() {
-	
-    }
+    });
+
 });
 
 
