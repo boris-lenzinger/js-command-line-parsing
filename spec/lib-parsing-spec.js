@@ -229,6 +229,10 @@ describe('Override of options', function() {
 describe('Documentation Generation', function() {
 
     it('Parameters', function() {
+	var options = parser.defineGlobalParameters("src/parameters.json");
+	var documentationOfOptions = options.generateDocumentation();
+	expect(documentationOfOptions).toBeDefined();
+	expect(documentationOfOptions.length).toBe(Object.keys(options.list).length);
     });
 
 });

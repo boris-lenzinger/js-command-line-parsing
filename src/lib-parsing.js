@@ -122,7 +122,7 @@ exports.Options.prototype.markOptionsAsMandatory = function(mandatoryParameters)
  * if you want a predefined model of documentation for a script.
  * @return an array storing the documentation for each supported option.
  */
-exports.Options.prototype.generateParametersDocumentation = function() {
+exports.Options.prototype.generateDocumentation = function() {
     var parameters = {}
     if ( this.list !== undefined ) {
 	parameters = this.list;
@@ -206,7 +206,7 @@ exports.generateScriptDocumentation = function(parametersAndLocalParsing, script
     }
 
     if ( parametersAndLocalParsing.list !== undefined ) {
-	var documentation = parametersAndLocalParsing.generateParametersDocumentation();
+	var documentation = parametersAndLocalParsing.generateDocumentation();
 
 	for ( var i in documentation ) {
 	    console.log(documentation[i]);
@@ -238,7 +238,7 @@ exports.generateJSONScriptDocumentation = function(parametersAndLocalParsing, sc
     }
 
     if ( parametersAndLocalParsing.list !== undefined ) {
-	json.options = parametersAndLocalParsing.generateParametersDocumentation();
+	json.options = parametersAndLocalParsing.generateDocumentation();
     }
 
     if ( scriptDocumentation !== undefined && scriptDocumentation.postDoc !== undefined ) {

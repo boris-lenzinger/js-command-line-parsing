@@ -49,7 +49,7 @@ console.log("");
 console.log("*************************************");
 console.log("Overrides the parameter documentation");
 localParameters = parametersAndLocalParsing;
-localParameters = localParameters.overrideDocumentationOfElement('filepath', 'The relative path to the file');
+localParameters = localParameters.overrideDocumentation('filepath', 'The relative path to the file');
 console.log(localParameters);
 console.log("");
 
@@ -96,7 +96,7 @@ listSupported = [ 'filepath', 'tokenName' ];
 mandatory = [ 'filepath' ];
 localParameters.pickOptions(listSupported).
     markOptionsAsMandatory(mandatory).
-    generateParametersDocumentation(parametersAndLocalParsing);
+    generateDocumentation(parametersAndLocalParsing);
 console.log("");
 
 
