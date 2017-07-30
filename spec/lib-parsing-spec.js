@@ -189,6 +189,18 @@ describe('Override of options', function() {
 	    overrideDocumentation('filepath', newDocumentation);
 	expect(options.list['filepath'].doc).toBe(newDocumentation);
     });
+
+    it('Overrides documentation of unexisting option must raise an exception', function() {
+	var newDocumentation = 'New documentation for unknown option.';
+	var exception;
+	try {
+	    parser.defineGlobalParameters("src/parameters.json").
+		overrideDocumentation('unknownOption', newDocumentation);
+	} catch (e) {
+	    exception = e;
+	}
+	expect(exception).toBeDefined();
+    });
        
     it('Parameters', function() {
 	var newDefaultValue = '/usr/local/bin';
@@ -196,7 +208,19 @@ describe('Override of options', function() {
 	    overrideDefaultValue('filepath', newDefaultValue);
 	expect(options.list['filepath'].value).toBe(newDefaultValue);
     });
-       
+
+    it('Overrides default value of unexisting option must raise an exception', function() {
+	var newValue = 'New value for unknown option.';
+	var exception;
+	try {
+	    parser.defineGlobalParameters("src/parameters.json").
+		overrideDefaultValue('unknownOption', newValue);
+	} catch (e) {
+	    exception = e;
+	}
+	expect(exception).toBeDefined();
+    });
+
 });
 
 
