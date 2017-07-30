@@ -53,7 +53,7 @@ module.exports = function(grunt) {
 						}
 					}
 				},
-				src: ['src/**/*.js']
+				src: ['src/lib-parsing.js']
 			}
 		}
 	});
