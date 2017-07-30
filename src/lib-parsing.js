@@ -2,13 +2,6 @@ var fs = require('fs');
 
 var exports = module.exports={};
 
-exports.Parameter = function(name, doc, longOption) {
-	this.name = name;
-	this.doc = doc;
-	this.longOption = longOption;
-}
-
-
 exports.Options = function(pathToParametersFile, encodingOfFile) {
 	if ( encodingOfFile === undefined ) {
 		encodingOfFile = 'utf8';
@@ -45,9 +38,9 @@ exports.Options.prototype.pickOptions = function(listOfSupportedParameters) {
     var parametersAndLocalParsing = new exports.Options();
     parametersAndLocalParsing.list = {};
 
-    if ( listOfSupportedParameters !== undefined && exports.libraryAvailableParameters !== undefined ) {
+    if ( listOfSupportedParameters !== undefined ) {
 	for ( var i in listOfSupportedParameters ) {
-	    var defOfParameter = exports.libraryAvailableParameters.list[listOfSupportedParameters[i]];
+	    var defOfParameter = this.list[listOfSupportedParameters[i]];
 	    if ( defOfParameter !== undefined ) {
 		parametersAndLocalParsing.list[listOfSupportedParameters[i]] = defOfParameter;
 	    } else {
