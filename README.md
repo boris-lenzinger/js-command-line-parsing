@@ -104,7 +104,8 @@ tools.
 Planned supported output format are :
   * txt for the console
   * JSON
-  * Wiki
+
+Based on JSON, it should be possible to convert to any other textual documentation format.
 
 # Using the command line parsing
 

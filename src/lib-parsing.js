@@ -127,6 +127,7 @@ exports.Options.prototype.markOptionsAsMandatory = function(mandatoryParameters)
  * Generates only the documentation for the parameters. This lets you generate the documentation
  * of the script you are writing in a quite free way. Check the function generateScriptDocumentation
  * if you want a predefined model of documentation for a script.
+ * @return an array storing the documentation for each supported option.
  */
 exports.Options.prototype.generateParametersDocumentation = function() {
     var parameters = {}
@@ -159,9 +160,7 @@ exports.Options.prototype.generateParametersDocumentation = function() {
     }
     documentation.sort();
 
-    for ( var i in documentation ) {
-	console.log(documentation[i]);
-    }
+    return documentation;
 }
 
 
@@ -214,7 +213,11 @@ exports.generateScriptDocumentation = function(parametersAndLocalParsing, script
     }
 
     if ( parametersAndLocalParsing.list !== undefined ) {
-	parametersAndLocalParsing.generateParametersDocumentation();
+	var documentation = parametersAndLocalParsing.generateParametersDocumentation();
+
+	for ( var i in documentation ) {
+	    console.log(documentation[i]);
+	}
 	console.log("");
     }
 
@@ -229,6 +232,30 @@ exports.generateScriptDocumentation = function(parametersAndLocalParsing, script
 	console.log(scriptDocumentation.syntaxExamples);
     }
 
+}
+
+
+/**
+ *
+ */
+exports.generateJSONScriptDocumentation = function(parametersAndLocalParsing, scriptDocumentation) {
+    var json = {};
+    if ( scriptDocumentation !== undefined && scriptDocumentation.header !== undefined ) {
+	json.header = scriptDocumentation.header;
+    }
+
+    if ( parametersAndLocalParsing.list !== undefined ) {
+	json.options = parametersAndLocalParsing.generateParametersDocumentation();
+    }
+
+    if ( scriptDocumentation !== undefined && scriptDocumentation.postDoc !== undefined ) {
+	json.postDoc = scriptDocumentation.postDoc;
+    }
+
+    if ( scriptDocumentation !== undefined && scriptDocumentation.syntaxExamples !== undefined ) {
+	json.syntaxExamples = scriptDocumentation.syntaxExamples;
+    }
+    return json;
 }
 
 
