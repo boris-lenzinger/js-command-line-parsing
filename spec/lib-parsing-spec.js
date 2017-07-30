@@ -258,7 +258,6 @@ describe('Documentation Generation', function() {
 	    var doc = documentationOfOptions[indexDoc];
 	    var regexpMandatory = new RegExp(' \(M\) ');
 	    var index = doc.search(/\s+\(M\)\s+/g);
-	    console.log(index,' ',doc);
 	    if ( index != -1 ) {
 		countForMandatory++;
 	    } else {
@@ -268,6 +267,27 @@ describe('Documentation Generation', function() {
 	expect(documentationOfOptions.length).toBe(Object.keys(options.list).length);
 	expect(countForMandatory).toBe(mandatory.length);
 	expect(countForNonMandatory).toBe(Object.keys(options.list).length - mandatory.length);
+    });
+
+    it('JSON documentation', function() {
+	var options = parser.defineGlobalParameters("src/parameters.json");
+	var documentationOfOptions = options.generateDocumentation();
+	var header = 'Header of the script';
+	var postDoc = 'Postdoc of the script...';
+	var syntaxExamples = 'Multiple syntax examples to illustrate the different capabilities of the script';
+	var scriptDocumentation = { 'header': header, 'postDoc': postDoc, 'syntaxExamples': syntaxExamples};
+	var json = parser.generateJSONScriptDocumentation(options, scriptDocumentation);
+	expect(json).toBeDefined();
+	expect(json.header).toBeDefined();
+	expect(json.header).toBe(header);
+	expect(json.options.length).toBe(documentationOfOptions.length);
+	for ( var index in json.options ) {
+	    expect(json.options[index]).toBe(documentationOfOptions[index]);
+	}
+	expect(json.postDoc).toBeDefined();
+	expect(json.postDoc).toBe(postDoc);
+	expect(json.syntaxExamples).toBeDefined();
+	expect(json.syntaxExamples).toBe(syntaxExamples);
     });
 
 });
