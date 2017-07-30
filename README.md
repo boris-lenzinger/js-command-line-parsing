@@ -1,20 +1,21 @@
 # Description of the project
 
-This tool allows to parse a command line of a script. I had done the
-same for bash scripts and wanted to use the same mindset for this
-language.
+Yet another parsing command line for scripts. This is not an attempt
+to reinvent the wheel. It is part of my learning of NodeJS and I wanted
+to adapt the ideas I had put in practice with command line parsing in
+bash scripts.
 
 # Common issue in parameters parsing
 
-Usually, scripts are written at different moments. The scripts are built around
-a common thema and then may need to use the same set of options.
-But it is quite commoni, among different scripts, to have parameters with different
+Usually, a set scripts is written on a long time period. The scripts are built around
+a common thema (your environment) and then may need to use the same set of options.
+But it is quite common, among different scripts, to have parameters with different
 names that designates the same thing. That is what I call the parameters
 inconsistency issue.
 
-I encountered this problem in a mission where I had to maintain and improve
-bash scripts. This was a big issue to remember what was the syntax for the option
-for this script or this script (one with underscore instead of hyphen, one with
+I encountered this problem in a mission where I had to maintain and improve a huge set
+of bash scripts. This was a big issue to remember what was the syntax for the options
+of one script or another (one with underscore instead of hyphen, one with
 long option that had a different spelling than the same option in another script).
 
 # The idea to avoid the parameters inconsistency
@@ -53,35 +54,57 @@ The field *value* is the default value for the option.
 
 # Declare the supported arguments of a script
 
-You simply need to declare an array named allowedParameters with the names of the parameters :
+You simply need to declare an array named (for instance) allowedOptions with the names of the parameters :
 
 ``` javascript
-var allowedParameters = [
-	"name1",
-	"name2"
+var allowedOptions = [
+	'name1',
+	'name2'
 ];
 ```
-Any supported parameter must defined in this array. Mandatory parameters are handled in another place.
+Any supported option must be defined in this array. Mandatory parameters are handled in another place.
+Then use the pickOptions function :
+``` javascript
+var parser = require('./lib-parsing.js');
+var globalParameters = parser.defineGlobalParameters('./parameters.json');
+var allowedOptions = [
+	'name1',
+	'name2'
+];
+var supportedSet = globalParameters.pickOptions(allowedOptions);
+```
 
 # Declare a parameter as mandatory
 
 To declare mandatory parameters, you have to define the following array :
 
 ``` javascript
-var mandatoryParameters = [
-	name1,
-	name2
+var parser = require('./lib-parsing.js');
+var globalOptions = parser.defineGlobalParameters('./parameters.json');
+var allowedOptions = [
+	'name1',
+	'name2'
 ];
+var mandatoryParameters = [
+	'name2'
+];
+var supportedSet = globalOptions.pickOptions(allowedOptions).
+    markOptionsAsMandatory(mandatoryParameters);
 ```
 The idea is to keep the file parameters.json generic since it is a general definition of the
 available options. Some options might be mandatory for some scripts and not mandatory for
-others. So the definition of mandatory must be set elsewhere.
+others. So the definition of mandatory must be set elsewhere than in the global definition.
 
 # Automatic generation of the documentation
 
 Of course, as the other libraries, the documentation is automatically built. The documentation
 can be ouputed in different formats. This allows the publication of the documentation in different
 tools.
+
+Planned supported output format are :
+  * txt for the console
+  * JSON
+  * Wiki
 
 # Using the command line parsing
 
@@ -93,11 +116,13 @@ of the parameter.
 // Load the parsing library
 var parsing = require("parsing");
 
-// Use a given parameter file
-parsing.useParameterFiles("pathToTheParameters");
+// Use your parameter file
+var specificOptions = parser.defineGlobalParameters(pathToYourFile).
+    pickOptions(yourArrayOfSpecificOptions).
+    markOptionsAsMandatory(theMandatoryOptions);
 
 // parse the command line
-parameters = parsing.parseCommandLine();
+parameters = specificOptions.parseCommandLine();
 
 ```
 
@@ -106,7 +131,7 @@ parameters = parsing.parseCommandLine();
 Simply overrides the following value :
 
 ``` javascript
-overrideDocumentation("name", "New documentation.");
+specificOptions.overrideDocumentation("name", "New documentation.");
 ```
 
 It works the same for the value of a parameter :

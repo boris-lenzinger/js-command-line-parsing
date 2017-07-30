@@ -63,19 +63,38 @@ exports.Options.prototype.pickOptions = function(listOfSupportedParameters) {
 
 /**
  * This function allows you to override the general documentation of the option to put
- * the one th	expect(options.list).toBeDefined();expect(options.list['filepath'].isMandatory).toBe(true);at is more relevant for this specific case.
+ * the most relevant documentation for this specific case.
  * @param parametersAndLocalParsing : the parameter that will be used for parsing the command line
  * of your script.
  * @param parameterName : the name of the parameter for which you want to override the documentation.
- * @newDocumentation : the new content of the documentation.
- * @return : the parameters that you will use for the parsing of your script. This is the variable that
- * was passed as the first parameter. If the parameter is not found, an error is thrown.
+ * @param newDocumentation : the new content of the documentation.
+ * @return : the object you have applied the method to. If the parameter is not found, an error is thrown.
  */
 exports.Options.prototype.overrideDocumentationOfElement = function(parameterName, newDocumentation) {
     if ( this.list[parameterName] !== undefined ) {
 	this.list[parameterName].doc = newDocumentation;
     } else {
 	throw new Error('Parameter "'+parameterName+'" was not found. Cannot override the documentation.');
+    }
+
+    return this;
+}
+
+
+/**
+ * This function allows you to override the default value of the option.
+ *
+ * @param parametersAndLocalParsing : the parameter that will be used for parsing the command line
+ * of your script.
+ * @param parameterName : the name of the parameter for which you want to override the default value.
+ * @param newValue : the new default value for this option.
+ * @return : the object you have applied the method to. If the parameter is not found, an error is thrown.
+ */
+exports.Options.prototype.overrideDefaultValue = function(parameterName, newValue) {
+    if ( this.list[parameterName] !== undefined ) {
+	this.list[parameterName].value = newDocumentation;
+    } else {
+	throw new Error('Parameter "'+parameterName+'" was not found. Cannot override the value.');
     }
 
     return this;
